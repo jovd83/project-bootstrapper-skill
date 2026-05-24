@@ -1,0 +1,11 @@
+{
+  "skill_name": "project-bootstrapper-skill",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Bootstrap the approved Angular and Spring Boot project in C:/projects/taskify. Use the existing stack skills and do not push anything.",
+      "expected_output": "Confirms approvals, selects stack-specific bootstrap adapters, creates the repository scaffold, preserves artifacts, runs smoke validation, and reports skipped publishing steps.",
+      "files": []
+    }
+  ]
+}
