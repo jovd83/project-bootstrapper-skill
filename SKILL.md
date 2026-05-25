@@ -1,128 +1,169 @@
 ---
-name: project-bootstrapper-skill
-description: Bootstrap a new repository skeleton from an approved architecture and implementation task plan. Use when creating the initial project folder, stack scaffold, dotfiles, README, environment sample, docs structure, validation commands, and local development setup while routing to stack-specific bootstrap skills when available.
+name: repository-bootstrapper-skill
+description: Create a new repository scaffold from approved architecture and implementation plans. Use when the user asks to bootstrap, scaffold, initialize, or create the initial project repository, including stack adapter selection, baseline files, planning artifact preservation, validation commands, setup summary, and safe handling of file-writing approvals.
+license: MIT
 metadata:
-  dispatcher-category: execution
-  dispatcher-layer: execution
-  dispatcher-lifecycle: draft
-  dispatcher-risk: high
-  dispatcher-writes-files: true
-  dispatcher-capabilities: repository-bootstrap, scaffold-selection, project-setup, stack-adapter-routing
-  dispatcher-accepted-intents: bootstrap_project_repository, create_project_skeleton, scaffold_new_repository
-  dispatcher-input-artifacts: architecture_plan, implementation_tasks, project_constitution, target_path
-  dispatcher-output-artifacts: bootstrapped_repository, setup_summary, validation_commands, scaffold_report
-  dispatcher-stack-tags: bootstrap, repository, greenfield, setup
+  version: "1.0.0"
+  maturity: "stable"
+  dispatcher-category: "execution"
+  dispatcher-layer: "execution"
+  dispatcher-risk: "high"
+  dispatcher-writes-files: "true"
+  dispatcher-capabilities: "repository-bootstrap, scaffold-selection, project-setup, stack-adapter-routing"
+  dispatcher-accepted-intents: "bootstrap_project_repository, create_project_skeleton, scaffold_new_repository, initialize_project_repo"
+  dispatcher-input-artifacts: "architecture_plan, implementation_tasks, project_constitution, target_path"
+  dispatcher-output-artifacts: "bootstrapped_repository, setup_summary, validation_commands, scaffold_report"
+  dispatcher-stack-tags: "bootstrap, repository, greenfield, setup"
 ---
 
-# Project Bootstrapper Skill
+# Repository Bootstrapper
 
-Use this skill after the user has approved the architecture plan, task plan, target path, and any dependency installation or network actions.
+Bootstrap the first usable repository structure for an already-approved project. Treat this as a high-risk file-writing skill: be explicit about target paths, approvals, adapter choices, generated files, commands, and skipped work.
 
-This skill creates the repository skeleton. It should route to stack-specific skills where the portfolio already has a stronger scaffold.
+Assume a Codex-style agent that can read and write local files and invoke available stack-specific skills. Network installs, Git operations, and GitHub actions require explicit approval.
 
-## Outcomes
+## Scope
 
-- Create the initial project directory and source scaffold.
-- Reuse stack-specific bootstrap skills when available.
-- Add common project files such as `README.md`, `.gitignore`, `.env.example`, docs folders, and validation notes.
-- Preserve the project constitution, specs, architecture plan, and task plan inside the new repository.
-- Produce a setup summary with commands that were run and commands still required.
+Use this skill to:
 
-## Do Not Use This Skill For
+- Create an initial project folder or monorepo skeleton from an approved architecture plan and implementation task plan.
+- Route known stacks to stronger stack-specific bootstrap skills when available.
+- Add baseline repository hygiene files such as `README.md`, `.gitignore`, `.env.example`, docs folders, and setup notes.
+- Preserve approved planning artifacts inside the new repository.
+- Run the lightest reasonable validation or produce exact validation commands when execution is not approved.
 
-- Choosing architecture. Use `greenfield-architecture-planner`.
-- Creating implementation tasks. Use `implementation-task-planner-skill`.
-- Implementing feature behavior beyond scaffold-level smoke checks.
-- Publishing to GitHub or pushing commits unless explicitly approved.
+Do not use this skill to:
 
-## Workflow
+- Choose the architecture. Use `greenfield-architecture-planner` or the user's approved architecture artifact.
+- Create the implementation backlog. Use `implementation-task-planner`.
+- Implement feature behavior beyond scaffold-level smoke checks.
+- Install dependencies, initialize Git, create remote repositories, commit, push, or publish without explicit approval.
+- Overwrite an existing non-empty target directory without explicit approval.
 
-0. Log telemetry if available:
+## Required Inputs
 
-```bash
-%USERPROFILE%\.agents\skills\skill-dispatcher\log-dispatch.cmd --skill project-bootstrapper-skill --intent bootstrap_project_repository --model <model_name> --reason <reason>
-```
+Before writing files, establish:
 
-1. Confirm target path and approval to create files there.
-2. Confirm whether dependency installation, network access, Git initialization, or GitHub repository creation is allowed.
-3. Read the architecture plan, task plan, and constitution.
-4. Select a bootstrap adapter:
-   - Angular application: use `angular-new-app`.
-   - Angular code inside an existing scaffold: use `angular-developer`.
-   - Spring Boot or Java service: use `dr-jskill`.
-   - MCP server: use `mcp-builder`.
-   - Olakai-monitored AI agent: use `new-project`.
-   - API contract first: use `openapi-spec-generation`.
-   - Unsupported or minimal stack: create a conservative repository skeleton using native tooling and documented commands.
-5. Create or preserve the project artifact folders.
-6. Add common repository hygiene files only when they do not conflict with the stack scaffold.
-7. Run the lightest available validation command, such as build, test, or framework smoke check.
-8. Produce a setup summary.
+- Target path, resolved to an absolute path when possible.
+- Approved architecture or technical plan.
+- Approved implementation task plan.
+- Project constitution, constraints, or non-negotiables if provided.
+- Approval boundaries for file creation, dependency installation, network access, Git initialization, GitHub or remote repository creation, and destructive cleanup.
 
-## Common Artifact Placement
+If any required input is missing or ambiguous, ask for the smallest clarification needed. If the user has already approved the target path and plans in the current thread, proceed within those boundaries.
 
-Prefer preserving planning artifacts in:
+## Memory Model
+
+- Runtime memory: keep adapter decisions, command results, validation status, and unresolved questions only for the current task.
+- Project-local memory: persist stable project artifacts inside the generated repository, preferably under `.agentspec/` and `docs/`, with clear filenames and provenance when available.
+- Shared memory: do not write cross-agent shared memory from this skill. If a user asks to promote reusable project facts to shared memory, delegate to a dedicated shared-memory skill or explicit external workflow.
+
+Runtime notes must not automatically become persistent files. Project-local artifacts must not automatically become shared memory.
+
+## Preflight Checklist
+
+1. Resolve the target path and inspect whether it exists.
+2. If the target directory exists and is non-empty, stop unless the user explicitly approved writing into it.
+3. Identify stack components from the approved plan: frontend, backend, API contract, database, worker, agent, MCP server, infrastructure, or documentation-only project.
+4. Select adapters before creating files. For multi-stack systems, create a root structure that cleanly contains each component instead of letting one adapter dominate the repository layout.
+5. Decide which actions are allowed now and which must be reported as skipped.
+6. Prefer a short scaffold plan before writes when the target is non-empty, the architecture is multi-stack, or approvals are narrow.
+
+## Adapter Selection
+
+Use the strongest available stack skill for scaffold work:
+
+| Project need | Preferred adapter |
+| --- | --- |
+| New Angular application | `angular-new-app` |
+| Angular code inside an existing scaffold | `angular-developer` |
+| Spring Boot or Java service | `dr-jskill` |
+| MCP server | `mcp-builder` |
+| API contract-first project | `openapi-spec-generation` |
+| Olakai-monitored AI agent | `new-project` |
+
+Adapter rules:
+
+- Use `new-project` only when the approved plan explicitly calls for an Olakai-monitored AI agent.
+- Use `openapi-spec-generation` for contract artifacts; do not treat it as a full application scaffold unless the plan says so.
+- If a preferred adapter is unavailable, create a conservative fallback scaffold and report the missing adapter.
+- Do not invent package managers, framework versions, deployment platforms, or CI systems that are not present in the approved plan.
+
+## Conservative Fallback Scaffold
+
+For unsupported stacks or when dependency/network actions are not approved, create only the minimum useful repository structure:
 
 ```text
-.agentspec/
-specs/
-docs/architecture/
-docs/api/
-docs/testing/
-docs/release/
+target/
+|-- README.md
+|-- .gitignore
+|-- .env.example
+|-- .agentspec/
+|   |-- architecture.md
+|   |-- implementation-plan.md
+|   `-- scaffold-report.md
+|-- docs/
+|   |-- architecture/
+|   |-- api/
+|   |-- testing/
+|   `-- release/
+|-- specs/
+|-- src/              # only when the architecture implies source code
+`-- tests/            # only when the stack supports automated tests
 ```
 
-If a framework scaffold has strong conventions, keep its source layout and place agent artifacts around it rather than forcing a foreign source layout.
+Keep placeholders lightweight. Prefer `.gitkeep` or a short README in empty directories only when needed to make intent clear.
 
-## Adapter Rules
+## Execution Workflow
 
-### Angular
+1. Confirm inputs and approvals.
+2. Inspect the target path and existing contents.
+3. Choose adapters and fallback areas.
+4. Create the target directory and scaffold root files.
+5. Invoke stack-specific adapters where applicable and allowed.
+6. Preserve planning artifacts under `.agentspec/`:
+   - `architecture.md`
+   - `implementation-plan.md`
+   - `constitution.md` when provided
+   - `scaffold-report.md`
+7. Add common repository hygiene files only when they do not conflict with generated stack files.
+8. Run the lightest approved validation command for each component.
+9. Update `scaffold-report.md` with adapter choices, files created, commands run, validation results, skipped actions, and next recommended skill or phase.
+10. Finalize with a concise setup summary.
 
-Use `angular-new-app` for new Angular applications. After scaffold, use `angular-developer` for components, services, routing, and build validation.
+## Validation Guidance
 
-### Spring Boot
+Prefer fast, local, deterministic checks:
 
-Use `dr-jskill` for Java and Spring Boot projects. Preserve its generated structure and validation guidance.
+- Framework smoke test or build command from the selected adapter.
+- Package manager validation only if dependency installation is approved or dependencies already exist.
+- Static checks for generated specs or config when available.
+- README/setup command review when executable validation is not possible.
 
-### MCP Server
+If validation cannot run, explain why and provide exact commands for the user or next agent. Do not claim the scaffold works without evidence.
 
-Use `mcp-builder` for MCP servers. Prefer TypeScript unless the architecture plan justifies Python.
+## Error Handling
 
-### AI Agent With Olakai Monitoring
+When a scaffold or validation command fails:
 
-Use `new-project` only when the project is specifically an AI agent requiring Olakai workflow, agent, KPI, and SDK setup.
+- Capture the command, working directory, exit status, and the useful portion of the error.
+- Fix obvious local scaffold mistakes within the approved scope.
+- Stop before destructive cleanup, global changes, network installs, or retries that require fresh approval.
+- Leave a readable `scaffold-report.md` even for partial scaffolds, clearly marking incomplete areas.
 
-### Minimal Or Unsupported Stack
+## Final Response Contract
 
-Create only:
+Report in this order:
 
-- source directory placeholder appropriate to the architecture
-- tests directory placeholder if the stack supports it
-- `README.md`
-- `.gitignore`
-- `.env.example`
-- docs and spec folders
-- validation notes
+```markdown
+Repository: [absolute path]
+Adapters: [adapter per component, or fallback]
+Created/changed: [high-signal file and folder summary]
+Commands run: [commands and results]
+Validation: [passed, failed, skipped with reason]
+Planning artifacts: [where architecture/tasks/constitution were preserved]
+Skipped: [actions not approved or not applicable]
+Next: [recommended implementation skill or next manual command]
+```
 
-Do not invent package managers, frameworks, or CI commands.
-
-## Guardrails
-
-- Do not overwrite an existing non-empty target directory without explicit approval.
-- Do not run install commands without approval when they require network or modify global state.
-- Do not initialize Git, commit, push, or create a GitHub repository unless explicitly approved.
-- Do not hide scaffold failures. Capture the command and failure output.
-- Do not create a custom scaffold when a stronger stack-specific skill applies.
-- Do not implement feature scope beyond smoke-level scaffolding.
-
-## Final Response
-
-Report:
-
-- repository path
-- adapter selected
-- files and folders created
-- commands run
-- validation results
-- skipped steps and why
-- next implementation skill or chain phase
+Keep the final response factual. Mention approvals that limited the work, missing adapters, and unresolved risks.

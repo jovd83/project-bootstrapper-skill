@@ -1,10 +1,47 @@
 {
-  "skill_name": "project-bootstrapper-skill",
+  "skill_name": "repository-bootstrapper-skill",
   "evals": [
     {
       "id": 1,
-      "prompt": "Bootstrap the approved Angular and Spring Boot project in C:/projects/taskify. Use the existing stack skills and do not push anything.",
-      "expected_output": "Confirms approvals, selects stack-specific bootstrap adapters, creates the repository scaffold, preserves artifacts, runs smoke validation, and reports skipped publishing steps.",
+      "prompt": "Use $repository-bootstrapper-skill to bootstrap C:/projects/taskify from an approved plan with an Angular frontend and Spring Boot backend. You may create files and run local smoke checks, but do not install dependencies, initialize Git, or push anything.",
+      "expected_output": "Selects Angular and Spring Boot adapters where available, creates a clean root structure for both components, preserves architecture and task artifacts under .agentspec, avoids dependency installation and Git actions, runs only approved local validation, and reports created files, commands, skipped steps, and next implementation skills.",
+      "files": [
+        "evals/fixtures/taskify-architecture.md",
+        "evals/fixtures/taskify-implementation-plan.md",
+        "evals/fixtures/taskify-constitution.md"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Use $repository-bootstrapper-skill to create the repository in C:/projects/existing-app. The target directory already contains files. I have not approved overwriting or modifying existing files yet.",
+      "expected_output": "Stops before writing, explains that the non-empty target requires explicit approval, asks for the narrow approval or alternate target path needed, and does not claim any scaffold was created.",
+      "files": [
+        "evals/fixtures/taskify-architecture.md",
+        "evals/fixtures/taskify-implementation-plan.md"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Use $repository-bootstrapper-skill to scaffold C:/projects/ledger-notes from this approved architecture: a documentation-first project with Markdown specs and no runtime application stack. Create files only; no network, package manager, or Git operations are allowed.",
+      "expected_output": "Uses the conservative fallback scaffold, creates only documentation/spec/artifact folders and baseline hygiene files, avoids source-code framework assumptions, preserves planning artifacts, skips validation that requires tooling, and provides exact optional follow-up commands if any are relevant.",
+      "files": [
+        "evals/fixtures/ledger-notes-architecture.md",
+        "evals/fixtures/ledger-notes-implementation-plan.md"
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "Use $repository-bootstrapper-skill for C:/projects/contract-service. The approved plan is API contract first, then a Java service. Network access and dependency installation are denied for now.",
+      "expected_output": "Prioritizes the API contract adapter for contract artifacts and the Java adapter or fallback for service structure, avoids dependency downloads, records denied install/network actions as skipped, and reports validation commands that can be run after dependencies are available.",
+      "files": [
+        "evals/fixtures/contract-service-architecture.md",
+        "evals/fixtures/contract-service-implementation-plan.md"
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "Use $repository-bootstrapper-skill to initialize C:/projects/unknown, but I only have the project name and no approved architecture or implementation task plan.",
+      "expected_output": "Does not scaffold prematurely, identifies the missing approved architecture and implementation task plan, asks for the smallest required inputs, and recommends the architecture or task-planning phase before bootstrap.",
       "files": []
     }
   ]
