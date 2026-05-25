@@ -49,10 +49,10 @@ Install by copying or cloning this folder into an Agent Skills directory support
 With the Skills CLI, after this repository is published to GitHub:
 
 ```powershell
-npx skills add <github-owner>/repository-bootstrapper-skill
+npx skills add jovd83/project-bootstrapper-skill
 ```
 
-For a fork, replace `<github-owner>` with the GitHub owner or organization that hosts the repository.
+For a fork, replace `jovd83` with the GitHub owner or organization that hosts the repository.
 
 For Codex-style local skills:
 
