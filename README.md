@@ -1,19 +1,19 @@
 # Repository Bootstrapper Skill
 
-[![version](https://img.shields.io/badge/version-1.0.0-blue)](CHANGELOG.md)
+[![version](https://img.shields.io/badge/version-2.0.0-blue)](CHANGELOG.md)
 [![status](https://img.shields.io/badge/status-stable-3fb950)](SKILL.md)
 [![category](https://img.shields.io/badge/category-execution-0a7ea4)](SKILL.md)
 [![validation](https://img.shields.io/badge/validation-GitHub%20Actions-2088ff)](.github/workflows/validate.yml)
 [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 [![Buy Me a Coffee](https://img.shields.io/badge/Buy%20Me%20a%20Coffee-ffdd00?style=flat&logo=buy-me-a-coffee&logoColor=black)](https://buymeacoffee.com/jovd83)
 
-`repository-bootstrapper-skill` helps an AI coding agent create the first usable repository scaffold for an approved greenfield project.
+`project-bootstrapper-skill` helps an AI coding agent create the first usable repository scaffold for an approved greenfield project.
 
 It is intentionally conservative: it routes to stack-specific bootstrap skills when they exist, writes only within approved boundaries, preserves planning artifacts locally, and reports exactly what was created, validated, skipped, or left for the next phase.
 
 ## What This Skill Does
 
-Use `repository-bootstrapper-skill` to turn approved planning artifacts into a safe, auditable repository scaffold.
+Use `project-bootstrapper-skill` to turn approved planning artifacts into a safe, auditable repository scaffold.
 
 - Creates an initial repository folder or monorepo skeleton from approved architecture and task plans.
 - Selects stack-specific adapters such as `angular-new-app`, `dr-jskill`, `mcp-builder`, `openapi-spec-generation`, and `new-project`.
@@ -57,14 +57,14 @@ For a fork, replace `jovd83` with the GitHub owner or organization that hosts th
 For Codex-style local skills:
 
 ```powershell
-Copy-Item -Recurse . "$env:USERPROFILE\.codex\skills\repository-bootstrapper-skill"
+Copy-Item -Recurse . "$env:USERPROFILE\.codex\skills\project-bootstrapper-skill"
 ```
 
 For repository-local sharing:
 
 ```powershell
 New-Item -ItemType Directory -Force .agents\skills
-Copy-Item -Recurse . .agents\skills\repository-bootstrapper-skill
+Copy-Item -Recurse . .agents\skills\project-bootstrapper-skill
 ```
 
 The skill follows the Agent Skills convention of a required `SKILL.md` file with optional supporting folders.
@@ -74,7 +74,7 @@ The skill follows the Agent Skills convention of a required `SKILL.md` file with
 Example prompt:
 
 ```text
-Use $repository-bootstrapper-skill to create C:/projects/taskify from the approved architecture plan and implementation task list below. You may create files, but do not install dependencies or initialize Git.
+Use $project-bootstrapper-skill to create C:/projects/taskify from the approved architecture plan and implementation task list below. You may create files, but do not install dependencies or initialize Git.
 ```
 
 Best results come from providing:
@@ -127,7 +127,7 @@ Runtime notes are not automatically persisted. Project-local artifacts are not a
 ## Repository Layout
 
 ```text
-repository-bootstrapper-skill/
+project-bootstrapper-skill/
 |-- .github/
 |   `-- workflows/
 |       `-- validate.yml

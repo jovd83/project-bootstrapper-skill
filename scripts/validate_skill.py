@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Repository-local validation for repository-bootstrapper-skill."""
+"""Repository-local validation for project-bootstrapper-skill."""
 
 from __future__ import annotations
 
@@ -70,8 +70,8 @@ def validate_skill_md(root: Path) -> list[str]:
     name = frontmatter.get("name", "")
     description = frontmatter.get("description", "")
 
-    if name != "repository-bootstrapper-skill":
-        errors.append(fail("SKILL.md frontmatter name must be repository-bootstrapper-skill"))
+    if name != "project-bootstrapper-skill":
+        errors.append(fail("SKILL.md frontmatter name must be project-bootstrapper-skill"))
     if not re.fullmatch(r"[a-z0-9-]{1,64}", name):
         errors.append(fail("SKILL.md frontmatter name must be lowercase hyphen-case"))
     if not description:
@@ -94,7 +94,7 @@ def validate_openai_yaml(root: Path) -> list[str]:
     required_fragments = [
         'display_name: "Repository Bootstrapper"',
         "short_description:",
-        'default_prompt: "Use $repository-bootstrapper-skill',
+        'default_prompt: "Use $project-bootstrapper-skill',
         "allow_implicit_invocation: true",
     ]
     for fragment in required_fragments:
@@ -110,14 +110,14 @@ def validate_release_docs(root: Path) -> list[str]:
     changelog = read_text(root / "CHANGELOG.md")
 
     expected_fragments = [
-        (skill_md, 'version: "1.0.0"', "SKILL.md must declare version 1.0.0"),
+        (skill_md, 'version: "2.0.0"', "SKILL.md must declare version 2.0.0"),
         (skill_md, 'maturity: "stable"', "SKILL.md must declare stable maturity"),
-        (readme, "version-1.0.0-blue", "README.md must show the 1.0.0 version badge"),
+        (readme, "version-2.0.0-blue", "README.md must show the 2.0.0 version badge"),
         (readme, "Buy%20Me%20a%20Coffee", "README.md must include the Buy Me a Coffee badge"),
         (readme, "validation-GitHub%20Actions", "README.md must include the validation badge"),
         (readme, "## What This Skill Does", "README.md must describe what the skill does"),
         (readme, "## When To Use It", "README.md must describe when to use the skill"),
-        (readme, "npx skills add <github-owner>/repository-bootstrapper-skill", "README.md must include npx skills install guidance"),
+        (readme, "npx skills add jovd83/project-bootstrapper-skill", "README.md must include npx skills install guidance"),
         (changelog, "## 1.0.0 - 2026-05-25", "CHANGELOG.md must include the 1.0.0 release entry"),
     ]
     for content, fragment, message in expected_fragments:
@@ -134,8 +134,8 @@ def validate_evals(root: Path) -> list[str]:
     except json.JSONDecodeError as exc:
         return [fail(f"evals/evals.json is invalid JSON: {exc}")]
 
-    if payload.get("skill_name") != "repository-bootstrapper-skill":
-        errors.append(fail("evals/evals.json skill_name must be repository-bootstrapper-skill"))
+    if payload.get("skill_name") != "project-bootstrapper-skill":
+        errors.append(fail("evals/evals.json skill_name must be project-bootstrapper-skill"))
 
     evals = payload.get("evals")
     if not isinstance(evals, list) or len(evals) < 5:
@@ -154,7 +154,7 @@ def validate_evals(root: Path) -> list[str]:
         for key in ["prompt", "expected_output", "files"]:
             if key not in case:
                 errors.append(fail(f"eval id {case_id} missing key: {key}"))
-        if not str(case.get("prompt", "")).startswith("Use $repository-bootstrapper-skill"):
+        if not str(case.get("prompt", "")).startswith("Use $project-bootstrapper-skill"):
             errors.append(fail(f"eval id {case_id} prompt must explicitly invoke the skill"))
         files = case.get("files", [])
         if not isinstance(files, list):

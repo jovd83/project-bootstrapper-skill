@@ -1,9 +1,9 @@
 ---
-name: repository-bootstrapper-skill
+name: project-bootstrapper-skill
 description: Create a new repository scaffold from approved architecture and implementation plans. Use when the user asks to bootstrap, scaffold, initialize, or create the initial project repository, including stack adapter selection, baseline files, planning artifact preservation, validation commands, setup summary, and safe handling of file-writing approvals.
 license: MIT
 metadata:
-  version: "1.0.0"
+  version: "2.0.0"
   maturity: "stable"
   dispatcher-category: "execution"
   dispatcher-layer: "execution"

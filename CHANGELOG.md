@@ -1,6 +1,17 @@
 # Changelog
 
-All notable changes to `repository-bootstrapper-skill` are documented here.
+All notable changes to `project-bootstrapper-skill` are documented here.
+
+## 2.0.0 - 2026-09-27
+
+### Changed
+
+- **BREAKING:** the skill is named `project-bootstrapper-skill` again, matching its folder and repository. The trigger is now `$project-bootstrapper-skill`. README, `agents/openai.yaml`, evals and the validator follow.
+- `project-genesis-chain` phase 9 calls it by this name.
+
+### Fixed
+
+- The validator expected a `<github-owner>` placeholder in the README's install command, while the README has the real `npx skills add jovd83/project-bootstrapper-skill`, so CI failed.
 
 ## 1.0.0 - 2026-05-25
 

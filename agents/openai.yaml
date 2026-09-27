@@ -1,7 +1,7 @@
 interface:
   display_name: "Repository Bootstrapper"
   short_description: "Safely scaffold approved new repositories"
-  default_prompt: "Use $repository-bootstrapper-skill to create the initial repository scaffold from my approved architecture plan and implementation task list."
+  default_prompt: "Use $project-bootstrapper-skill to create the initial repository scaffold from my approved architecture plan and implementation task list."
 
 policy:
   allow_implicit_invocation: true
