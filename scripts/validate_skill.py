@@ -95,7 +95,7 @@ def validate_openai_yaml(root: Path) -> list[str]:
         'display_name: "Repository Bootstrapper"',
         "short_description:",
         'default_prompt: "Use $project-bootstrapper-skill',
-        "allow_implicit_invocation: true",
+        "allow_implicit_invocation: false",
     ]
     for fragment in required_fragments:
         if fragment not in content:
@@ -110,9 +110,9 @@ def validate_release_docs(root: Path) -> list[str]:
     changelog = read_text(root / "CHANGELOG.md")
 
     expected_fragments = [
-        (skill_md, 'version: "2.0.0"', "SKILL.md must declare version 2.0.0"),
+        (skill_md, 'version: "2.1.0"', "SKILL.md must declare version 2.1.0"),
         (skill_md, 'maturity: "stable"', "SKILL.md must declare stable maturity"),
-        (readme, "version-2.0.0-blue", "README.md must show the 2.0.0 version badge"),
+        (readme, "version-2.1.0-blue", "README.md must show the 2.1.0 version badge"),
         (readme, "Buy%20Me%20a%20Coffee", "README.md must include the Buy Me a Coffee badge"),
         (readme, "validation-GitHub%20Actions", "README.md must include the validation badge"),
         (readme, "## What This Skill Does", "README.md must describe what the skill does"),

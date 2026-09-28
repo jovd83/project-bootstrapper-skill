@@ -4,4 +4,4 @@ interface:
   default_prompt: "Use $project-bootstrapper-skill to create the initial repository scaffold from my approved architecture plan and implementation task list."
 
 policy:
-  allow_implicit_invocation: true
+  allow_implicit_invocation: false

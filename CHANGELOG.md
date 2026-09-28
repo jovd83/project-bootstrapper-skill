@@ -2,6 +2,13 @@
 
 All notable changes to `project-bootstrapper-skill` are documented here.
 
+## 2.1.0 - 2026-09-28
+
+### Changed
+
+- Invoke-only: `disable-model-invocation: true` for Claude Code and `allow_implicit_invocation: false` in `agents/openai.yaml` for Codex. The skill writes files and is phase 9 of `project-genesis-chain`, which the `project-genesis` agent runs; it no longer competes for automatic selection. Run it with `/project-bootstrapper-skill` or `$project-bootstrapper-skill`.
+- `metadata` carries the author.
+
 ## 2.0.0 - 2026-09-27
 
 ### Changed

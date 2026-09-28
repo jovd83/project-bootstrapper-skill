@@ -1,6 +1,6 @@
 # Repository Bootstrapper Skill
 
-[![version](https://img.shields.io/badge/version-2.0.0-blue)](CHANGELOG.md)
+[![version](https://img.shields.io/badge/version-2.1.0-blue)](CHANGELOG.md)
 [![status](https://img.shields.io/badge/status-stable-3fb950)](SKILL.md)
 [![category](https://img.shields.io/badge/category-execution-0a7ea4)](SKILL.md)
 [![validation](https://img.shields.io/badge/validation-GitHub%20Actions-2088ff)](.github/workflows/validate.yml)
