@@ -56,7 +56,7 @@ If any required input is missing or ambiguous, ask for the smallest clarificatio
 
 - Runtime memory: keep adapter decisions, command results, validation status, and unresolved questions only for the current task.
 - Project-local memory: persist stable project artifacts inside the generated repository, preferably under `.agentspec/` and `docs/`, with clear filenames and provenance when available.
-- Shared memory: do not write cross-agent shared memory from this skill. If a user asks to promote reusable project facts to shared memory, delegate to a dedicated shared-memory skill or explicit external workflow.
+- Shared memory: do not write cross-agent shared memory from this skill. If a user asks to promote reusable project facts, record them in the agent's own memory (for example CLAUDE.md or AGENTS.md) as an explicit step.
 
 Runtime notes must not automatically become persistent files. Project-local artifacts must not automatically become shared memory.
 
